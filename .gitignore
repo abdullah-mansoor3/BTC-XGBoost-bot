@@ -1,0 +1,5 @@
+.env
+.ipynb_checkpoints
+.vscode
+btc_posts.json
+btc_usdt_ohlcv_1h_5years.csv
