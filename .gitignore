@@ -1,5 +1,9 @@
 .env
 .ipynb_checkpoints
 .vscode
+__pycache__
 btc_posts.json
 btc_usdt_ohlcv_1h_5years.csv
+preprocessed_ohlcv.csv
+test.csv
+train.csv
