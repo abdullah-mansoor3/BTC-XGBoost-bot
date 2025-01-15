@@ -64,26 +64,13 @@ def calculate_features(df):
     # 1. Last 100 candlesticks average between high and low
     df['avg_100_candles'] = (df['high'] + df['low']).rolling(window=100).mean()
 
-    # 2. Standard Deviation
-    df['std'] = (df['high'] + df['low']).rolling(window=100).std()
-
     # 3. EMAs
     df['ema_20'] = ta.ema(df['close'], length=20)
-    df['ema_100'] = ta.ema(df['close'], length=100)
-
-    # 4. RSI
-    df['rsi_20'] = ta.rsi(df['close'], length=20)
-
-    # 5. MACD
-    macd = ta.macd(df['close'], fast=12, slow=26, signal=9)
-    df['macd_line'] = macd['MACD_12_26_9']
-    df['macd_signal'] = macd['MACDs_12_26_9']
 
     # 6. Bollinger Bands
     bollinger = ta.bbands(df['close'], length=20, std=2)
     df['bollinger_upper'] = bollinger['BBU_20_2.0']
     df['bollinger_lower'] = bollinger['BBL_20_2.0']
-    df['bollinger_bandwidth'] = bollinger['BBB_20_2.0']
 
     # 7. Volume over last 100 candles
     df['volume_100'] = df['volume'].rolling(window=100).sum()
@@ -172,9 +159,7 @@ def get_info_and_predict(candle_time, model_filename, scaling_params_filename):
     candles = fetch_last_100_candles(candle_time)
 
     # Add the time-related features (hour, day_of_week, month)
-    candles['hour'] = candle_time.hour
     candles['day_of_week'] = candle_time.weekday()
-    candles['month'] = candle_time.month
 
     # Ensure 'timestamp' is removed from the DataFrame to avoid SettingWithCopyWarning
     updated_features = candles.drop(columns=['timestamp']).copy()
@@ -188,6 +173,8 @@ def get_info_and_predict(candle_time, model_filename, scaling_params_filename):
 
     # Load scaling parameters
     scaling_params = load_scaling_params(scaling_params_filename)
+
+    updated_features = updated_features.drop("volume")
 
     # Predict the next closing price
     prediction = predict_next_closing_price(model_filename, updated_features, scaling_params)

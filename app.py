@@ -40,7 +40,7 @@ if mode == "Historical Prediction":
     predicted_next_closing_price = get_info_and_predict(input_timestamp, model_filename, scaling_params_filename)
 
     # Display the predicted value
-    st.write(f"Predicted next closing price: **{predicted_next_closing_price:.2f}**")
+    st.write(f"Predicted next closing price: **{predicted_next_closing_price:.2f} $**")
 
     # Fetch the last 100 candles to calculate the error (if actual data is available)
     candles = fetch_last_100_candles(input_timestamp)
@@ -48,8 +48,8 @@ if mode == "Historical Prediction":
 
     # Calculate and display the error
     error = actual_close - predicted_next_closing_price
-    st.write(f"Actual closing price: **{actual_close:.2f}**")
-    st.write(f"Prediction error (Actual - Predicted): **{error:.2f}**")
+    st.write(f"Actual closing price: **{actual_close:.2f} $**")
+    st.write(f"Prediction error (Actual - Predicted): **{error:.2f} $**")
 
 elif mode == "Live Prediction":
     # Live Prediction: Current time rounded to the previous hour

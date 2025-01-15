@@ -4,7 +4,7 @@
 
  In this project, I built a model to predict the next closing price of the BTC/USDT trading pair on Binance using historical candlestick data. The model uses **XGBoost regression**, and incorporates key technical indicators to predict price movement. The goal is to predict the closing price of the next candle based on real-time data and technical analysis features such as **EMA (Exponential Moving Average**), **RSI (Relative StrengthIndex)**, **MACD (Moving Average Convergence Divergence)**, and **Bollinger Bands**.
  
-The model is evaluated with standard metrics like **Mean Squared Error (MSE)** and **Root Mean Squared Error (RMSE)**, allowing us to assess its accuracy in predicting future prices. Additionally, the model is deployed in a web application, where predictions can be made on historical data or in live prediction mode.
+ Additionally, the model is implemented in a streamlit web application, where predictions can be made on historical data or in live prediction mode.
 
 ## Requirements
 
@@ -20,8 +20,8 @@ pip install -r requirements.txt
 - [`app.py`](./app.py): Streamlit-based web interface for input and displaying predictions.
 - [`./data/scaling_params.json`](./data/scaling_params.json): Contains the mean and standard deviation values used to normalize/unnormalize the features.
 - [`xgb_model.pkl`](./xgb_model.pkl): Saved XGBoost model for predicting the next closing price.
-- [`./data/test_results.csv`](./data/test_results.csv): CSV file that stores the actual vs predicted prices and associated error metrics.
-- [`/notebooks`](./notebooks): This folder contains the Jupyter notebooks with code used to fetch, clean and preprocess the data and train the model.
+- [`./data/test_results.csv`](./data/test_results.csv): CSV file that stores the actual vs predicted prices.
+- [`/notebooks`](./notebooks): This folder contains the Jupyter notebooks with code used to fetch, clean and preprocess the data and train + evaluate the model.
 
 ## Usage
 
@@ -40,11 +40,11 @@ streamlit run app.py
 
 - **Past Prediction Mode**: You can input a specific timestamp (date and hour) to predict the next closing price of the BTC/USDT trading pair.
 
-![prediction](./historical.png)
+![prediction](./media/historical.png)
 
 - **Live Prediction Mode**: Automatically updates predictions as new candles close. You will see the predicted price and the error once the candle closes.
  
-![prediction](./live.png)
+![prediction](./media/live.png)
 
 
  ## How the App Works
@@ -84,17 +84,30 @@ streamlit run app.py
  
  ### 5. Model Training
  I trained the XGBoost regression model on the preprocessed data, using historical features derived from technical indicators and the actual closing prices as the target variable. During training, I employed cross-validation to fine-tune the model’s hyperparameters and ensure the model generalizes well on unseen data.
- 
- ### 6. Evaluation and Error Metrics
+
+ ### 6. Hyperparameter Tuning
+ I implemented hyperparameter tuning to reduce the complexity of the model and avoid overfitting. The hyperparametersI tuned were:
+- Max depth of trees
+- Learning rate
+- Number of boosting rounds
+- Subsample
+- Colsample
+- Minimum sum of instance weights needed in a child node.
+- L1 & L2 regularization
+
+
+ ### 7. Recursive Feature Elimination
+ I implemented recursive feature elimination to get the top 10 most important features to reduce complexity of the model and avoid overfitting.
+
+ ### 8. Evaluation and Error Metrics
  The performance of the model was evaluated using standard metrics.
 
-![result](./result.png)
+![result](./media/result.png)
 
  
- The RMSE of approximately $290.04 means the model’s predictions are, on average, off by $290.04 from the actual BTC/USDT closing price.
+ The RMSE of approximately $309.32 means the model’s predictions are, on average, off by $309.32 from the actual BTC/USDT closing price.
 
- 
- The R^2 score explains how much variance in the target variable (price) is captured by the model. A value of 1 means the model explains 100% of the variance, which is excellent. This indicates that the model is perfectly fitting the data, which rarely happens in real-world scenarios but would be ideal.
+The actual live prediction errors might differ because the model was tested on a small dataset.
 
 
 ## License

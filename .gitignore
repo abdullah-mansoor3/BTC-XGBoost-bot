@@ -7,3 +7,5 @@ btc_usdt_ohlcv_1h_5years.csv
 preprocessed_ohlcv.csv
 test.csv
 train.csv
+validation.csv
+validation_results.csv
